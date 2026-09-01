@@ -1,20 +1,8 @@
 import "dotenv/config";
 import { prisma } from "../src/db";
+import { istCalendarDate } from "../src/lib/time";
 
 //can be deleted later.
-
-const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
-
-function istCalendarDate(instant: Date): Date {
-  const shifted = new Date(instant.getTime() + IST_OFFSET_MS);
-  return new Date(
-    Date.UTC(
-      shifted.getUTCFullYear(),
-      shifted.getUTCMonth(),
-      shifted.getUTCDate(),
-    ),
-  );
-}
 
 const rupees = (paise: number | null) =>
   `₹${((paise ?? 0) / 100).toLocaleString("en-IN")}`;

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { fakerEN_IN as faker } from '@faker-js/faker';
 import bcrypt from 'bcryptjs';
 import { prisma } from '../src/db';
+import { istCalendarDate, istToday, istToUtc } from '../src/lib/time';
 
 // Deterministic: the same dataset every run. This is what makes a full
 // `db:reset && db:seed` a credible disaster-recovery story rather than a
@@ -15,30 +16,6 @@ type BookingStatus =
   | 'IN_PROGRESS'
   | 'COMPLETED'
   | 'CANCELLED';
-
-// India has a fixed +05:30 offset and no DST, so a constant shift is exact.
-const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
-
-/** UTC instant for a wall-clock time in Asia/Kolkata. */
-function istToUtc(year: number, month: number, day: number, hour: number, minute: number): Date {
-  return new Date(Date.UTC(year, month, day, hour, minute) - IST_OFFSET_MS);
-}
-
-/** The IST calendar date an instant falls on, as UTC midnight (for `@db.Date`). */
-function istCalendarDate(instant: Date): Date {
-  const shifted = new Date(instant.getTime() + IST_OFFSET_MS);
-  return new Date(Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate()));
-}
-
-/** Today's IST calendar date parts, used as the anchor for every offset below. */
-function istToday(): { year: number; month: number; day: number } {
-  const shifted = new Date(Date.now() + IST_OFFSET_MS);
-  return {
-    year: shifted.getUTCFullYear(),
-    month: shifted.getUTCMonth(),
-    day: shifted.getUTCDate(),
-  };
-}
 
 const CATALOGUE: Array<{
   category: string;

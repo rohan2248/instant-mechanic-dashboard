@@ -1,25 +1,19 @@
-import 'dotenv/config';
-import cors from 'cors';
-import express from 'express';
+import { createApp } from './app';
+import { env } from './config/env';
 import { prisma } from './db';
 
-const app = express();
-const port = Number(process.env.PORT ?? 4000);
-
-app.use(cors({ origin: process.env.CORS_ORIGIN ?? '*' }));
-app.use(express.json());
-
-app.get('/api/health', async (_req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.json({ status: 'ok', database: 'reachable', timestamp: new Date().toISOString() });
-  } catch {
-    res.status(503).json({ status: 'degraded', database: 'unreachable' });
-  }
+const server = createApp().listen(env.PORT, () => {
+  console.log(`API listening on http://localhost:${env.PORT}`);
 });
 
-// Dashboard, bookings, mechanics and customers routes are added next.
-
-app.listen(port, () => {
-  console.log(`API listening on http://localhost:${port}`);
-});
+// Drain in-flight requests and release the connection pool before exiting, so a
+// PM2 or systemd restart does not leave sockets open against Neon.
+for (const signal of ['SIGINT', 'SIGTERM'] as const) {
+  process.on(signal, () => {
+    console.log(`\n${signal} received, shutting down...`);
+    server.close(async () => {
+      await prisma.$disconnect();
+      process.exit(0);
+    });
+  });
+}
