@@ -5,7 +5,6 @@ import { NavMain } from "@/components/layout/nav-main"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -54,11 +53,11 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <div className="px-2 py-1 text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
-          Live operations dashboard
-        </div>
-      </SidebarFooter>
+      {/*
+        No footer. What was here restated the tagline already sitting in the
+        header two inches above it, and a dashboard's chrome should not spend
+        permanent screen space on text nobody reads twice.
+      */}
 
       <SidebarRail />
     </Sidebar>

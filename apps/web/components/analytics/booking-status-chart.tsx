@@ -88,7 +88,7 @@ export function BookingStatusChart({ rows }: { rows: StatusBreakdownRow[] }) {
                     <tspan
                       x={viewBox.cx}
                       y={viewBox.cy}
-                      className="fill-foreground text-2xl font-semibold"
+                      className="metric fill-foreground text-2xl font-semibold"
                     >
                       {formatNumber(total)}
                     </tspan>
@@ -124,7 +124,7 @@ export function BookingStatusChart({ rows }: { rows: StatusBreakdownRow[] }) {
               </span>
             </span>
             <span className="flex shrink-0 items-baseline gap-2">
-              <span className="tabular font-medium">
+              <span className="metric font-medium">
                 {formatNumber(row.count)}
               </span>
               <span className="tabular w-12 text-right text-xs text-muted-foreground">

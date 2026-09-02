@@ -6,111 +6,143 @@
 /*
  * Monochrome design system.
  *
- * Every colour token is `oklch(L 0 0)` — chroma is pinned to 0, so no token can
- * render a hue. Meaning is carried by lightness, weight and fill instead, which
- * is why `--destructive` is a dark neutral rather than red.
+ * Hue is a constant, not a variable. Every colour token sits on one hue
+ * (`--hue`, a cool graphite) at a chroma low enough to read as a neutral. Since
+ * the hue never changes between tokens, it still cannot carry meaning — which
+ * is the property the palette was built for, and why `--destructive` is a dark
+ * neutral rather than red. Meaning stays with lightness, weight and fill.
+ *
+ * The tiny chroma is what separates this from `oklch(L 0 0)`: uniformly
+ * greyed-out interfaces read as unfinished, tinted ones read as chosen.
  */
 
 :root {
   --radius: 0.625rem;
 
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Every colour below is expressed against this one hue. */
+  --hue: 265;
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --background: oklch(0.985 0.002 var(--hue));
+  --foreground: oklch(0.175 0.009 var(--hue));
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  /* Cards sit a step brighter than the page — elevation without a shadow. */
+  --card: oklch(1 0.001 var(--hue));
+  --card-foreground: oklch(0.175 0.009 var(--hue));
 
-  --primary: oklch(0.145 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --popover: oklch(1 0.001 var(--hue));
+  --popover-foreground: oklch(0.175 0.009 var(--hue));
 
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.195 0.011 var(--hue));
+  --primary-foreground: oklch(0.985 0.002 var(--hue));
 
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --secondary: oklch(0.955 0.004 var(--hue));
+  --secondary-foreground: oklch(0.225 0.009 var(--hue));
 
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.955 0.004 var(--hue));
+  --muted-foreground: oklch(0.525 0.011 var(--hue));
 
-  --destructive: oklch(0.35 0 0);
-  --destructive-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.935 0.006 var(--hue));
+  --accent-foreground: oklch(0.225 0.009 var(--hue));
 
-  --surface: oklch(0.985 0 0);
-  --surface-foreground: oklch(0.145 0 0);
+  --destructive: oklch(0.355 0.013 var(--hue));
+  --destructive-foreground: oklch(0.985 0.002 var(--hue));
 
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --surface: oklch(0.97 0.003 var(--hue));
+  --surface-foreground: oklch(0.175 0.009 var(--hue));
+
+  --border: oklch(0.905 0.005 var(--hue));
+  --input: oklch(0.905 0.005 var(--hue));
+  --ring: oklch(0.63 0.014 var(--hue));
 
   /* Six steps, because bookings-by-status always returns exactly six statuses. */
-  --chart-1: oklch(0.2 0 0);
-  --chart-2: oklch(0.32 0 0);
-  --chart-3: oklch(0.45 0 0);
-  --chart-4: oklch(0.58 0 0);
-  --chart-5: oklch(0.7 0 0);
-  --chart-6: oklch(0.82 0 0);
+  --chart-1: oklch(0.22 0.012 var(--hue));
+  --chart-2: oklch(0.34 0.012 var(--hue));
+  --chart-3: oklch(0.46 0.011 var(--hue));
+  --chart-4: oklch(0.59 0.01 var(--hue));
+  --chart-5: oklch(0.71 0.008 var(--hue));
+  --chart-6: oklch(0.83 0.006 var(--hue));
 
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.94 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.97 0.003 var(--hue));
+  --sidebar-foreground: oklch(0.175 0.009 var(--hue));
+  --sidebar-primary: oklch(0.225 0.01 var(--hue));
+  --sidebar-primary-foreground: oklch(0.985 0.002 var(--hue));
+  --sidebar-accent: oklch(0.93 0.006 var(--hue));
+  --sidebar-accent-foreground: oklch(0.225 0.009 var(--hue));
+  --sidebar-border: oklch(0.905 0.005 var(--hue));
+  --sidebar-ring: oklch(0.63 0.014 var(--hue));
+
+  /*
+   * Shadows carry the page hue rather than neutral black, so they read as the
+   * surface darkening rather than as grey haze laid over it. One light source,
+   * directly above — every step only grows, it never changes direction.
+   */
+  --elevation-1: 0 1px 2px -1px oklch(0.35 0.03 var(--hue) / 0.1);
+  --elevation-2:
+    0 1px 2px -1px oklch(0.35 0.03 var(--hue) / 0.08),
+    0 4px 10px -3px oklch(0.35 0.03 var(--hue) / 0.09);
+  --elevation-3:
+    0 2px 4px -2px oklch(0.35 0.03 var(--hue) / 0.1),
+    0 12px 28px -8px oklch(0.35 0.03 var(--hue) / 0.14);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --background: oklch(0.165 0.009 var(--hue));
+  --foreground: oklch(0.97 0.003 var(--hue));
 
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
+  --card: oklch(0.213 0.01 var(--hue));
+  --card-foreground: oklch(0.97 0.003 var(--hue));
 
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.213 0.01 var(--hue));
+  --popover-foreground: oklch(0.97 0.003 var(--hue));
 
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.97 0.003 var(--hue));
+  --primary-foreground: oklch(0.213 0.01 var(--hue));
 
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.275 0.011 var(--hue));
+  --secondary-foreground: oklch(0.97 0.003 var(--hue));
 
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted: oklch(0.275 0.011 var(--hue));
+  --muted-foreground: oklch(0.715 0.011 var(--hue));
 
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.3 0.013 var(--hue));
+  --accent-foreground: oklch(0.97 0.003 var(--hue));
 
-  --destructive: oklch(0.75 0 0);
-  --destructive-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.75 0.012 var(--hue));
+  --destructive-foreground: oklch(0.213 0.01 var(--hue));
 
-  --surface: oklch(0.205 0 0);
-  --surface-foreground: oklch(0.985 0 0);
+  --surface: oklch(0.213 0.01 var(--hue));
+  --surface-foreground: oklch(0.97 0.003 var(--hue));
 
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 18%);
-  --ring: oklch(0.556 0 0);
+  --border: oklch(0.99 0.004 var(--hue) / 12%);
+  --input: oklch(0.99 0.004 var(--hue) / 18%);
+  --ring: oklch(0.58 0.014 var(--hue));
 
   /* Ramp inverted so chart-1 stays the highest-contrast step in both themes. */
-  --chart-1: oklch(0.97 0 0);
-  --chart-2: oklch(0.85 0 0);
-  --chart-3: oklch(0.72 0 0);
-  --chart-4: oklch(0.58 0 0);
-  --chart-5: oklch(0.46 0 0);
-  --chart-6: oklch(0.34 0 0);
+  --chart-1: oklch(0.97 0.004 var(--hue));
+  --chart-2: oklch(0.85 0.007 var(--hue));
+  --chart-3: oklch(0.72 0.009 var(--hue));
+  --chart-4: oklch(0.59 0.011 var(--hue));
+  --chart-5: oklch(0.47 0.012 var(--hue));
+  --chart-6: oklch(0.35 0.012 var(--hue));
 
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.985 0 0);
-  --sidebar-primary-foreground: oklch(0.205 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.19 0.009 var(--hue));
+  --sidebar-foreground: oklch(0.97 0.003 var(--hue));
+  --sidebar-primary: oklch(0.97 0.003 var(--hue));
+  --sidebar-primary-foreground: oklch(0.213 0.01 var(--hue));
+  --sidebar-accent: oklch(0.275 0.011 var(--hue));
+  --sidebar-accent-foreground: oklch(0.97 0.003 var(--hue));
+  --sidebar-border: oklch(0.99 0.004 var(--hue) / 12%);
+  --sidebar-ring: oklch(0.58 0.014 var(--hue));
+
+  /* On a dark ground a shadow can't darken further, so the steps lean on
+     near-black opacity instead of the tint — same direction, more depth. */
+  --elevation-1: 0 1px 2px -1px oklch(0.06 0.02 var(--hue) / 0.5);
+  --elevation-2:
+    0 1px 2px -1px oklch(0.06 0.02 var(--hue) / 0.45),
+    0 4px 10px -3px oklch(0.06 0.02 var(--hue) / 0.5);
+  --elevation-3:
+    0 2px 4px -2px oklch(0.06 0.02 var(--hue) / 0.5),
+    0 12px 28px -8px oklch(0.06 0.02 var(--hue) / 0.6);
 }
 
 @theme inline {
@@ -159,6 +191,24 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Tailwind's `shadow-*` scale, re-pointed at the tinted elevation ramp so
+     `shadow-sm` can never emit generic black haze. */
+  --shadow-xs: var(--elevation-1);
+  --shadow-sm: var(--elevation-1);
+  --shadow-md: var(--elevation-2);
+  --shadow-lg: var(--elevation-3);
+  --shadow-xl: var(--elevation-3);
+
+  /*
+   * Named layers, so no component has to invent a number. Anything reaching
+   * for a raw `z-[9999]` belongs here instead.
+   */
+  --z-index-base: 0;
+  --z-index-raised: 10;
+  --z-index-sticky: 20;
+  --z-index-overlay: 30;
+  --z-index-texture: 40;
 }
 
 @layer base {
@@ -166,14 +216,87 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  /*
+   * Headings are set tighter than the body as they grow: at display sizes the
+   * default tracking and leading read as loose. Balancing keeps a two-line
+   * heading from dropping a single orphaned word onto its last line.
+   */
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 /* Tabular figures keep metric tiles and money columns from jittering as they poll. */
 @utility tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/*
+ * The treatment for a headline figure. Geist Mono is the dashboard's numeral
+ * voice — every digit is the same width, so a polled value can't shift the
+ * layout, and the mono gives the numbers a different texture from the labels
+ * around them. Tracked in, because mono at display size sets loose.
+ */
+@utility metric {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.045em;
+  font-feature-settings: "ss01";
+}
+
+/* Small labels set in the opposite direction: tracked out to stay legible. */
+@utility label-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+/* Roughly 65 characters — the readable measure for supporting prose. */
+@utility measure {
+  max-width: 62ch;
+}
+
+/*
+ * Fixed film grain. Flat token colours are clean but inert; a fraction of a
+ * percent of noise gives every surface something to catch. Fixed rather than
+ * per-surface so the texture stays still while the page scrolls under it,
+ * which is what makes it read as the screen rather than as a pattern.
+ */
+@utility grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-texture);
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.dark .grain {
+  opacity: 0.05;
+  mix-blend-mode: screen;
 }
 
 /*

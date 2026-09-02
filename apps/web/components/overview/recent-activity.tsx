@@ -26,10 +26,10 @@ import type { ActivityItem } from "@/types/api"
  */
 export function RecentActivity({ items }: { items: ActivityItem[] }) {
   return (
-    <Card className="flex-1">
+    <Card className="h-full shadow-xs">
       <CardHeader>
         <CardTitle>Recent activity</CardTitle>
-        <CardDescription>
+        <CardDescription className="measure">
           Status changes across all bookings, newest first.
         </CardDescription>
       </CardHeader>
@@ -47,10 +47,16 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
             </EmptyHeader>
           </Empty>
         ) : (
-          <ScrollArea className="h-[22rem] pr-3">
-            <ol className="flex flex-col gap-4">
+          <ScrollArea className="h-88 pr-3">
+            {/* Divided rather than gapped: a feed of status changes reads as a
+                log, and the rules give the eye a per-event boundary that pure
+                whitespace at this density does not. */}
+            <ol className="flex flex-col divide-y divide-border/60">
               {items.map((item) => (
-                <li key={item.id} className="flex flex-col gap-1.5">
+                <li
+                  key={item.id}
+                  className="flex flex-col gap-1.5 py-3 first:pt-0 last:pb-0"
+                >
                   <div className="flex flex-wrap items-center gap-1.5">
                     {item.fromStatus ? (
                       <>

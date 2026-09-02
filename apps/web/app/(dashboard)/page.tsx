@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/shared/page-header"
 import {
   ActivitySkeleton,
   ListSkeleton,
-  StatGridSkeleton,
+  OverviewStatsSkeleton,
 } from "@/components/shared/skeletons"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -30,17 +30,24 @@ export default function OverviewPage() {
         description="Live vehicle service operations across every workshop."
       />
 
-      <Suspense fallback={<StatGridSkeleton />}>
+      <Suspense fallback={<OverviewStatsSkeleton />}>
         <StatsSection />
       </Suspense>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Suspense fallback={<CardFallback><ListSkeleton /></CardFallback>}>
-          <StatusSection />
-        </Suspense>
-        <Suspense fallback={<CardFallback><ActivitySkeleton /></CardFallback>}>
-          <ActivitySection />
-        </Suspense>
+      {/* Not a 50/50 split: the activity feed is a scrolling column of short
+          lines and the status list is six rows of numbers, so an even split
+          leaves one padded out and the other cramped. */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+        <div className="lg:col-span-2">
+          <Suspense fallback={<CardFallback><ListSkeleton /></CardFallback>}>
+            <StatusSection />
+          </Suspense>
+        </div>
+        <div className="lg:col-span-3">
+          <Suspense fallback={<CardFallback><ActivitySkeleton /></CardFallback>}>
+            <ActivitySection />
+          </Suspense>
+        </div>
       </div>
     </>
   )

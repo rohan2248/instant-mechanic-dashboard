@@ -22,14 +22,14 @@ export function StatusSummary({ rows }: { rows: StatusBreakdownRow[] }) {
   const max = Math.max(...rows.map((row) => row.count), 1)
 
   return (
-    <Card className="flex-1">
+    <Card className="h-full shadow-xs">
       <CardHeader>
         <CardTitle>Booking status</CardTitle>
-        <CardDescription>
+        <CardDescription className="measure">
           Every booking by pipeline stage. Select a stage to filter the table.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-3">
+      <CardContent className="flex flex-col gap-3.5">
         {rows.map((row) => (
           <Link
             key={row.status}
@@ -39,7 +39,7 @@ export function StatusSummary({ rows }: { rows: StatusBreakdownRow[] }) {
             <div className="flex items-center justify-between gap-3">
               <BookingStatusBadge status={row.status} />
               <div className="flex items-baseline gap-2 text-sm">
-                <span className="tabular font-medium">
+                <span className="metric font-medium">
                   {formatNumber(row.count)}
                 </span>
                 <span className="tabular text-xs text-muted-foreground">
@@ -52,9 +52,11 @@ export function StatusSummary({ rows }: { rows: StatusBreakdownRow[] }) {
                 className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"
                 role="presentation"
               >
+                {/* Scaled rather than sized: `width` on a polling dashboard
+                    re-runs layout on every tick, `transform` composites. */}
                 <div
-                  className="h-full rounded-full bg-foreground/70 transition-[width] group-hover:bg-foreground"
-                  style={{ width: `${(row.count / max) * 100}%` }}
+                  className="h-full origin-left rounded-full bg-foreground/60 transition-transform duration-500 ease-out group-hover:bg-foreground"
+                  style={{ transform: `scaleX(${row.count / max})` }}
                 />
               </div>
               <span className="tabular w-16 text-right text-xs text-muted-foreground">

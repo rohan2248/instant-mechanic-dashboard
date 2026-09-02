@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { cn } from "@/lib/utils"
 
 /**
  * Suspense fallbacks.
@@ -9,26 +10,53 @@ import { Skeleton } from "@/components/ui/skeleton"
  * that pauses.
  */
 
-export function StatCardSkeleton() {
+export function StatCardSkeleton({
+  tier = "support",
+}: {
+  tier?: "lead" | "support"
+}) {
+  const lead = tier === "lead"
+
   return (
-    <Card className="gap-0 py-4">
-      <CardHeader className="px-4 pb-1">
+    <Card className={cn("gap-0", lead ? "py-5" : "py-4")}>
+      <CardHeader className={cn("pb-1", lead ? "px-5" : "px-4")}>
         <Skeleton className="h-3 w-24" />
       </CardHeader>
-      <CardContent className="px-4">
-        <Skeleton className="h-7 w-20" />
-        <Skeleton className="mt-2 h-3 w-28" />
+      <CardContent className={lead ? "px-5" : "px-4"}>
+        {/* Heights track StatCard's two value sizes so the figure lands where
+            its placeholder sat rather than nudging the hint below it. */}
+        <Skeleton className={cn(lead ? "h-9 w-28" : "h-6 w-20")} />
+        <Skeleton className={cn("h-3 w-28", lead ? "mt-3" : "mt-2")} />
       </CardContent>
     </Card>
   )
 }
 
-export function StatGridSkeleton({ count = 8 }: { count?: number }) {
+/** For uniform strips — the mechanics roster counts. */
+export function StatGridSkeleton({ count = 3 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {Array.from({ length: count }, (_, i) => (
         <StatCardSkeleton key={i} />
       ))}
+    </div>
+  )
+}
+
+/** Mirrors the overview's two-tier metric block, 3 lead + 5 support. */
+export function OverviewStatsSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {Array.from({ length: 3 }, (_, i) => (
+          <StatCardSkeleton key={i} tier="lead" />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }, (_, i) => (
+          <StatCardSkeleton key={i} />
+        ))}
+      </div>
     </div>
   )
 }

@@ -26,7 +26,22 @@ export default function DashboardLayout({ children }: LayoutProps<"/">) {
         <AppSidebar />
         <SidebarInset className="min-w-0">
           <SiteHeader />
-          <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</div>
+          {/*
+            The skip link's target, and the page's single <main>.
+
+            `max-w-[112rem]` stops the four-across metric grid from stretching
+            into letterboxed strips on an ultrawide monitor; the shell itself
+            still spans the full width so the header rule reaches both edges.
+            Bottom padding runs heavier than top — a page that ends flush with
+            its last card reads as cut off rather than finished.
+          */}
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className="mx-auto flex w-full max-w-[112rem] flex-1 flex-col gap-6 p-4 pb-10 outline-none md:gap-8 md:p-8 md:pb-16"
+          >
+            {children}
+          </main>
         </SidebarInset>
       </SidebarProvider>
     </LiveRefreshProvider>

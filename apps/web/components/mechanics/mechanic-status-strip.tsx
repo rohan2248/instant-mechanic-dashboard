@@ -29,11 +29,17 @@ export function MechanicStatusStrip({
         const { label, dot } = MECHANIC_STATUS_PRESENTATION[status]
 
         return (
-          <Card key={status} className="py-4 transition-colors hover:bg-muted/40">
+          <Card
+            key={status}
+            className="py-4 shadow-xs transition-[box-shadow,transform] duration-200 hover:-translate-y-px hover:shadow-md"
+          >
             <CardContent className="px-4">
+              {/* The ring is drawn on the link itself rather than suppressed:
+                  these tiles are the page's primary filter, so a keyboard user
+                  has to be able to see which one is focused. */}
               <Link
                 href={`/mechanics?status=${status}`}
-                className="flex items-center justify-between gap-3 focus-visible:outline-none"
+                className="flex items-center justify-between gap-3 rounded-md p-1 -m-1 transition-colors hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
               >
                 <span className="flex items-center gap-2">
                   <span
@@ -44,10 +50,10 @@ export function MechanicStatusStrip({
                         : "size-2 rounded-full bg-foreground"
                     }
                   />
-                  <span className="text-sm font-medium">{label}</span>
+                  <span className="label-xs text-muted-foreground">{label}</span>
                 </span>
                 <span className="flex items-baseline gap-2">
-                  <span className="tabular text-xl font-semibold">
+                  <span className="metric text-2xl font-semibold">
                     {formatNumber(count)}
                   </span>
                   <span className="tabular text-xs text-muted-foreground">

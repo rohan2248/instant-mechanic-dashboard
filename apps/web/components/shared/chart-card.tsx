@@ -27,16 +27,29 @@ export function ChartCard({
   children: React.ReactNode
 }) {
   return (
-    <Card className="flex flex-col">
+    // `h-full` so two charts sharing a row end level regardless of whether one
+    // of them carries a footnote — the footnote strip absorbs the difference
+    // instead of leaving the shorter card floating.
+    <Card className="flex h-full flex-col shadow-xs">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        {description ? <CardDescription>{description}</CardDescription> : null}
+        <CardTitle className="text-[0.9375rem]">{title}</CardTitle>
+        {description ? (
+          <CardDescription className="measure text-[0.8125rem]">
+            {description}
+          </CardDescription>
+        ) : null}
         {action ? <CardAction>{action}</CardAction> : null}
       </CardHeader>
-      <CardContent className="flex-1">{children}</CardContent>
+      {/* Centred rather than top-aligned: `h-full` levels the cards in a row,
+          which leaves a fixed-height chart (the donut) sitting in a taller
+          card than it needs. Centring turns that slack into margin instead of
+          a void hanging under the chart. */}
+      <CardContent className="flex flex-1 flex-col justify-center">
+        {children}
+      </CardContent>
       {footnote ? (
-        <CardFooter>
-          <p className="text-xs text-muted-foreground">{footnote}</p>
+        <CardFooter className="mt-auto">
+          <p className="measure text-xs text-muted-foreground">{footnote}</p>
         </CardFooter>
       ) : null}
     </Card>
